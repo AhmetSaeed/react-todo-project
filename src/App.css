@@ -62,7 +62,7 @@ h1 {
  cursor: pointer;
  margin-right: 5px;
 }
-
+  /* task completed  */
 .complete-button:hover,
 .delete-button:hover {
  background-color: #0f77d9;

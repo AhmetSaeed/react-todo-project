@@ -2,64 +2,79 @@ import { useState } from "react";
 import "./App.css";
 
 function App() {
- const [todo, setTodo] = useState([
-  { id: 1, task: "task-2" },
-  { id: 2, task: "task-3" },
- ]);
- const [input, setInput] = useState("");
+  const [todo, setTodo] = useState([
+    { id: 1, task: "task-2", completed: false },
+    { id: 2, task: "task-3", completed: false },
+  ]);
 
- function handleOnChange(event) {
-  setInput(event.target.value);
- }
+  const [input, setInput] = useState("");
 
- function handleOnClick() {
-  const todos = {
-   id: todo.length === 0 ? 1 : todo[todo.length - 1].id + 1,
-   task: input,
-  };
-  setTodo([...todo, todos]);
- }
+  function handleOnChange(event) {
+    setInput(event.target.value);
+  }
 
- const handleOnDelete = (value) => {
-  const deletedItem = todo.filter((filtered, index) => {
-   return filtered.id !== value;
-  });
-  console.log(deletedItem);
-  setTodo(deletedItem);
- };
+  function handleOnClick() {
+    const todos = {
+      id: todo.length === 0 ? 1 : todo[todo.length - 1].id + 1,
+      task: input,
+      completed: false,
+    };
+    setTodo([...todo, todos]);
+    setInput("");
+  }
 
- // ["task-6","task-7","task-8"]
- return (
-  <div className="app">
-   <h1>Todo List</h1>
-   <div className="todo-input">
-    <input
-     type="text"
-     placeholder="Add a new task..."
-     onChange={handleOnChange}
-    />
-    <button onClick={handleOnClick}>Add</button>
-   </div>
-   <ul className="todo-list">
-    {todo.map(function (value, index) {
-     return (
-      <li className="">
-       {console.log(value)}
-       {value.id}. {value.task}
-       <div className="button-group">
-        <button className="complete-button">Complete</button>
-        <button
-         className="delete-button"
-         onClick={() => handleOnDelete(value.id)}>
-         Delete
-        </button>
-       </div>
-      </li>
-     );
-    })}
-   </ul>
-  </div>
- );
+  function handleOnDelete(value) {
+    const deletedItem = todo.filter((filtered) => filtered.id !== value);
+    setTodo(deletedItem);
+  }
+
+  function handleComplete(value) {
+    const updatedTodo = todo.map((item) => {
+      if (item.id === value) {
+        return { ...item, completed: !item.completed };
+      }
+      return item;
+    });
+    setTodo(updatedTodo);
+  }
+
+  return (
+    <div className="app">
+      <h1>Todo List</h1>
+      <div className="todo-input">
+        <input
+          type="text"
+          placeholder="Add a new task..."
+          onChange={handleOnChange}
+          value={input}
+        />
+        <button onClick={handleOnClick}>Add</button>
+      </div>
+      <ul className="todo-list">
+        {todo.map(function (value, index) {
+          return (
+            <li className={value.completed ? "completed" : ""} key={value.id}>
+              {value.id}. {value.task}
+              <div className="button-group">
+                <button
+                  className="complete-button"
+                  onClick={() => handleComplete(value.id)}
+                >
+                  {value.completed ? "Incomplete" : "Complete"}
+                </button>
+                <button
+                  className="delete-button"
+                  onClick={() => handleOnDelete(value.id)}
+                >
+                  Delete
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
 }
 
 export default App;
